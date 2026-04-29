@@ -110,8 +110,14 @@ def process_disprot_cut_data(all_data, cut_length=400, alpha=1 / 2, save=True):
     temp_sequence_list = []
     temp_disorder_regions_list = []
 
+    # FIX: filter by both ID and sequence string — two DisProt proteins (DP00722,
+    # DP00384) are duplicates of CAID entries (DP02137, DP02138) under older IDs,
+    # so ID-only filtering leaks them into training.
+    caid_id_set = set(get_caid_ids())
+    caid_seq_set = set(get_caid_data()[SEQUENCES])
+
     for i in range(n):
-        if sequence_ids[i] in get_caid_ids():
+        if sequence_ids[i] in caid_id_set or sequence_list[i] in caid_seq_set:
             continue
 
         if len(sequence_list[i]) >= cut_length:
