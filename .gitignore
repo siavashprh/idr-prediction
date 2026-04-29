@@ -1,4 +1,43 @@
-.vscode/
+# Python
 __pycache__/
-.DS_Store
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDEs
+.vscode/
 .idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model weights and checkpoints (large binaries)
+data_repository/ckpt/
+*.pth
+*.pt
+*.ckpt
+
+# HuggingFace model cache (download on demand)
+.cache/
+
+# Experiment outputs
+data_repository/log/
+wandb/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Installers committed by mistake
+*.sh
+
+# Docs (large PDFs, not needed in repo history)
+docs/

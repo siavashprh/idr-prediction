@@ -78,7 +78,8 @@ def get_embedding(
 
     for sample in tqdm(dataset_seqs):
         with torch.no_grad():
-            ids = pre_tokenizer.batch_encode_plus(
+            # FIX: batch_encode_plus removed in transformers 5.x; use tokenizer directly
+            ids = pre_tokenizer(
                 [sample],
                 add_special_tokens=True,
                 padding=True,

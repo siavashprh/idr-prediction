@@ -11,7 +11,6 @@ from src.config import (
     CAID_BENCHMARK,
     CUT_DATA_TEMPLATE,
 )
-from Bio import SeqIO
 from base.utils.io import format_filename
 
 SEQUENCES = "sequences"
@@ -152,6 +151,11 @@ def get_caid_ids():
 
 
 def get_caid_data():
+    # CAID file format: BioPython parses each entry as one record whose seq field
+    # is the amino acid sequence concatenated with the binary label string.
+    # We split at the first '0' or '1' character.
+    # FIX: original used a bare for-loop without for-else, so if no label chars
+    # were found 'i' would silently be the last index, dropping the final residue.
     data = {}
     with open(CAID_BENCHMARK) as handle:
         sequence_list = []
@@ -159,18 +163,16 @@ def get_caid_data():
         disorder_regions_list = []
         for record in SeqIO.parse(handle, "fasta"):
             str_seq = str(record.seq)
-            for i in range(len(str_seq)):
-                if str_seq[i] == "1" or str_seq[i] == "0":
-                    break
+            split_idx = next(
+                (i for i, c in enumerate(str_seq) if c in ("0", "1")),
+                None,
+            )
+            if split_idx is None:
+                raise ValueError(f"No label string found in CAID record {record.id}")
 
-            sequence_list.append(str_seq[:i])
+            sequence_list.append(str_seq[:split_idx])
             sequence_ids.append(record.id)
-
-            str_region = str_seq[i:]
-            list_region = []
-            for c in str_region:
-                list_region.append(int(c))
-            disorder_regions_list.append(list_region)
+            disorder_regions_list.append([int(c) for c in str_seq[split_idx:]])
 
         data[SEQUENCES] = sequence_list
         data[DISORDER_REGIONS] = disorder_regions_list

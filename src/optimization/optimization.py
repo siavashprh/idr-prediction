@@ -112,30 +112,30 @@ class IDRTester(Tester):
     def test(self, model: TransformerLSTMModel, data: Data, threshold=0.5) -> Result:
 
         model.model.eval()
-        predictions = [model.predict(sequence) for sequence in data.X]
+        # FIX: use predict_proba for continuous scores (needed for AUC/ROC);
+        # predict() returns discrete argmax which breaks roc_curve.
+        proba_predictions = [model.predict_proba(sequence) for sequence in data.X]
         binary_predictions = [
-            np.where(np.array(pred) >= threshold, 1, 0).tolist() for pred in predictions
+            np.where(np.array(prob) >= threshold, 1, 0).tolist() for prob in proba_predictions
         ]
 
         total_labels = []
-        total_predictions = []
-        total_binary_predictions = []
+        total_proba = []
         sequence_results = []
         for k in range(len(data.y)):
             labels = data.y[k]
-            predicted = predictions[k]
+            proba = proba_predictions[k]
             binary_predicted = binary_predictions[k]
 
             total_labels += labels
-            total_predictions += predicted
-            total_binary_predictions += binary_predicted
+            total_proba += (proba if isinstance(proba, list) else [proba])
 
             result = get_prediction_results(
                 y_test=labels, y_predict=binary_predicted, threshold=threshold
             )
             sequence_results.append(result)
 
-        result = get_prediction_results(total_labels, total_predictions, threshold)
+        result = get_prediction_results(total_labels, total_proba, threshold)
         result.sub_results = sequence_results
 
         return result

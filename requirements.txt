@@ -1,7 +1,29 @@
-numpy
-biopython~=1.81
-matplotlib
-torch
-transformers
-tqdm
-scikit-learn
+# Core ML
+torch==2.6.0+cu124
+numpy==2.4.4
+scikit-learn==1.8.0
+scipy==1.17.1
+
+# Protein language models
+transformers==5.7.0
+tokenizers==0.22.2
+sentencepiece==0.2.1
+safetensors==0.7.0
+huggingface-hub
+
+# Bioinformatics
+biopython==1.87
+
+# Utilities
+tqdm==4.67.3
+matplotlib==3.10.9
+pillow==12.2.0
+filelock==3.25.2
+regex==2026.4.4
+protobuf==7.34.1
+
+# Dev / experiment tracking
+wandb
+pytest
+ruff
+omegaconf

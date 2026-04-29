@@ -46,7 +46,8 @@ class LSTMTagger(nn.Module):
     def forward(self, sequence):
         seq = " ".join(sequence).split()
         with torch.no_grad():
-            ids = self.pre_tokenizer.batch_encode_plus(
+            # FIX: batch_encode_plus removed in transformers 5.x; use tokenizer directly
+            ids = self.pre_tokenizer(
                 [seq],
                 add_special_tokens=True,
                 padding=True,
@@ -121,7 +122,8 @@ class TransformerLSTMTagger(nn.Module):
             seqs.append(seq)
 
         with torch.no_grad():
-            ids = self.pre_tokenizer.batch_encode_plus(
+            # FIX: batch_encode_plus removed in transformers 5.x; use tokenizer directly
+            ids = self.pre_tokenizer(
                 seqs,
                 add_special_tokens=False,
                 padding=True,
