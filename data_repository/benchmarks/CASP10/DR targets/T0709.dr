@@ -1,0 +1,36 @@
+PFRMAT	DR
+TARGET	T0709
+G	X	1
+C	O	2
+P	D	3
+R	D	4
+P	D	5
+R	D	6
+G	D	7
+D	D	8
+N	O	9
+P	O	10
+P	O	11
+L	O	12
+T	O	13
+C	O	14
+S	O	15
+Q	O	16
+D	O	17
+S	O	18
+D	O	19
+C	O	20
+L	O	21
+A	O	22
+G	O	23
+C	O	24
+V	O	25
+C	O	26
+G	O	27
+P	O	28
+N	O	29
+G	O	30
+F	O	31
+C	O	32
+G	O	33
+END

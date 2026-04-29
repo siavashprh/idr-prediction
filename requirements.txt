@@ -1,0 +1,7 @@
+numpy
+biopython~=1.81
+matplotlib
+torch
+transformers
+tqdm
+scikit-learn
