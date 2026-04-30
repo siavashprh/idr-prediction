@@ -1,0 +1,25 @@
+# Baseline: Transformer-LSTM on prot_bert_bfd embeddings
+# Faithfully reconstructed from other/notebooks/reports/model_transformer.ipynb
+# Note: original used Rostlab/prot_bert (non-bfd); we use prot_bert_bfd as decided.
+
+model:
+  name: baseline_transformer_lstm
+  pre_model: Rostlab/prot_bert_bfd
+  input_dim: 1024
+  linear_hidden_dim: 64
+  num_heads: 4
+  num_blocks: 2
+  dropout: 0.6
+  with_lstm: true
+  lstm_n_layers: 2
+
+training:
+  lr: 0.0003
+  batch_size: 16   # original=64; reduced for 4GB VRAM (RTX 3050)
+  n_epoch: 10
+  first_class_weight: 0.1
+  device: cuda
+
+data:
+  cut_length: 400
+  alpha: 0.5
