@@ -1,0 +1,25 @@
+# Augmented training: Transformer-LSTM on real + GAN-generated DisProt
+# Identical hyperparameters to baseline for a fair comparison.
+
+model:
+  name: augmented_transformer_lstm
+  pre_model: Rostlab/prot_bert_bfd
+  input_dim: 1024
+  linear_hidden_dim: 64
+  num_heads: 4
+  num_blocks: 2
+  dropout: 0.6
+  with_lstm: true
+  lstm_n_layers: 2
+
+training:
+  lr: 0.0003
+  batch_size: 64
+  n_epoch: 10
+  first_class_weight: 0.1
+  device: cuda
+
+data:
+  cut_length: 400
+  alpha: 0.5
+  synthetic_path: data_repository/processed/synthetic_disprot.json

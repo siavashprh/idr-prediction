@@ -1,0 +1,15 @@
+# GAN training — unconditional per-token embedding GAN
+# Phase 3: reproduce null result (no meaningful F1 improvement expected)
+
+gan:
+  latent_dim: 128
+  lr: 0.0002
+  batch_size: 512
+  n_epoch: 50
+  real_label_smooth: 0.9
+
+data:
+  embeddings_path: data_repository/processed/disprot_embeddings.pt
+  synthetic_path: data_repository/processed/synthetic_disprot.json
+  n_synthetic_chunks: 2107
+  chunk_len: 400
