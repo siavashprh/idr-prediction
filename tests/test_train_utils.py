@@ -122,3 +122,38 @@ class TestTrainGanPrerequisite:
             from src.train.train_gan import main
             with pytest.raises(FileNotFoundError, match="Baseline checkpoint not found"):
                 main()
+
+
+class TestTrainAugmentedPrerequisite:
+    _MINIMAL_CFG = """\
+model:
+  name: test_augmented
+  pre_model: Rostlab/prot_bert_bfd
+  input_dim: 1024
+  linear_hidden_dim: 64
+  num_heads: 4
+  num_blocks: 2
+  dropout: 0.6
+  with_lstm: true
+  lstm_n_layers: 2
+training:
+  lr: 0.0003
+  batch_size: 16
+  n_epoch: 1
+  first_class_weight: 0.1
+  device: cpu
+data:
+  cut_length: 400
+  alpha: 0.5
+  synthetic_path: data_repository/processed/synthetic_disprot.json
+"""
+
+    def test_fails_with_clear_error_when_synthetic_data_missing(self, tmp_path, monkeypatch):
+        """train_augmented.main() raises FileNotFoundError if synthetic data is absent."""
+        monkeypatch.chdir(tmp_path)
+        cfg_path = tmp_path / "augmented_test.yaml"
+        cfg_path.write_text(self._MINIMAL_CFG)
+        with patch("sys.argv", ["train_augmented", str(cfg_path)]):
+            from src.train.train_augmented import main
+            with pytest.raises(FileNotFoundError, match="Synthetic data not found"):
+                main()
