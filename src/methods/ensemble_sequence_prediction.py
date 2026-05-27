@@ -26,3 +26,23 @@ def predict_sequence(
         return y_predict
 
     return np.array(model.predict([sequence]))
+
+
+def predict_proba_sequence(model, sequence, max_length: int = 400, alpha: float = 0.75):
+    """Sliding-window inference returning per-residue P(disorder)."""
+    if len(sequence) <= max_length:
+        p = model.predict_proba([sequence])
+        return np.array(p if isinstance(p, list) else [p])
+    y = np.zeros(len(sequence))
+    weight = np.zeros(len(sequence))
+    start = 0
+    while start < len(sequence):
+        end = min(start + max_length, len(sequence))
+        p = model.predict_proba([sequence[start:end]])
+        chunk = np.array(p if isinstance(p, list) else [p])
+        y[start:end] += chunk
+        weight[start:end] += 1.0
+        if end == len(sequence):
+            break
+        start += int(max_length * alpha)
+    return y / np.maximum(weight, 1.0)
