@@ -112,3 +112,13 @@ class TestLogRun:
         with patch("subprocess.check_output", return_value=b"abc1234\n"):
             path = log_run("configs/baseline.yaml", "m", 1.0, {})
         assert path.exists()
+
+
+class TestTrainGanPrerequisite:
+    def test_fails_with_clear_error_when_baseline_ckpt_missing(self, tmp_path, monkeypatch):
+        """train_gan.main() raises FileNotFoundError if baseline checkpoint is absent."""
+        monkeypatch.chdir(tmp_path)
+        with patch("sys.argv", ["train_gan", "configs/gan.yaml"]):
+            from src.train.train_gan import main
+            with pytest.raises(FileNotFoundError, match="Baseline checkpoint not found"):
+                main()
